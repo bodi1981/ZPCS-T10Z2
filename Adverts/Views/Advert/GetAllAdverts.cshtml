@@ -1,0 +1,133 @@
+﻿@model Adverts.Core.ViewModels.AdvertsViewModel
+
+@{
+    ViewData["Title"] = "Ogłoszenia";
+}
+
+<div class="container">
+    <h1 class="display-5 mb-3">Ogłoszenia</h1>
+
+    <form id="filterForm" class="row row-cols-lg-auto g-3 align-items-center mb-3">
+        <div class="col-12">
+            <input asp-for="Title" class="form-control" placeholder="Tytuł" />
+        </div>
+
+        <div class="col-12">
+            <select asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))" class="form-control" id="category">
+                <option value="">-- wybierz kategorię --</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <select asp-for="ProductId" class="form-control" id="product" disabled>
+                <option value="">-- wybierz rodzaj produktu --</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <select asp-for="ConditionId" asp-items="@(new SelectList(Model.Conditions, "Id", "Name"))" class="form-control">
+                <option value="">-- wybierz stan --</option>
+            </select>
+        </div>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="IsMyAdverts" class="form-check-label" />
+                    <label asp-for="IsMyAdverts"></label>
+                </div>
+            </div>
+        }
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Szukaj</button>
+        </div>
+    </form>
+
+</div>
+
+<div id="advertCards" class="row row-cols-1 row-cols-md-3 g-4">
+    <partial name="_AdvertCards" model="Model" />
+</div>
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#filterForm').submit(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("GetAllAdverts", "Advert")",
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        $('#advertCards').html(data);
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "html"
+                });
+
+                return false;
+            });
+        });
+
+        function deleteAdvert(id, btn) {
+            if (!confirm("Czy na pewno chcesz usnunąć te ogłoszenie?"))
+                return;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("RemoveAdvert", "Advert")",
+                data: {
+                    advertId: id
+                },
+                    success: function (data) {
+                        if (data.success) {
+                            var elem = btn.parentNode.parentNode.parentNode;
+                            elem.parentNode.removeChild(elem);
+                        } else {
+                            alert(data.message)
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "json"
+                });
+
+        }
+
+
+        $('#category').change(function () {
+            var selectedCategory = $("#category").val();
+            var productsSelect = $('#product');
+            productsSelect.empty();
+
+            if (selectedCategory != null && selectedCategory != '') {
+                productsSelect.prop("disabled", false);
+                $.getJSON('@Url.Action("GetProducts", "Advert")', { categoryId: selectedCategory }, function (products) {
+                    if (products != null && !jQuery.isEmptyObject(products)) {
+                        setUpDefaultProductsOption(productsSelect);
+
+                        $.each(products, function (index, product) {
+                            productsSelect.append($('<option/>', {
+                                value: product.id,
+                                text: product.name
+                            }));
+                        });
+                    };
+                });
+            } else {
+                productsSelect.prop("disabled", true);
+                setUpDefaultProductsOption(productsSelect);
+            }
+        });
+
+
+    </script>
+
+
+}

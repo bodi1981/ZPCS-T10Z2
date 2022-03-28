@@ -1,0 +1,23 @@
+﻿@model Adverts.Core.ViewModels.AdvertsViewModel
+
+
+@foreach (var advert in Model.Adverts)
+{
+    <div class="col">
+        <div class="card h-100">
+            <img src="@(string.IsNullOrEmpty(advert.MainImageUrl) ? @"\adverts\images\noimage.png" : advert.MainImageUrl)" class="card-img-top" />
+            <div class="card-body">
+                <h5 class="card-title">@advert.Title</h5>
+                <p class="card-text">@advert.Description</p>
+            </div>
+            <div class="card-footer">
+                <a asp-action="GetAdvert" asp-controller="Advert" asp-route-advertId="@advert.Id" class="btn btn-sm btn-outline-secondary">Szczegóły</a>
+                @if (Model.UserId == advert.UserId && !string.IsNullOrWhiteSpace(advert.UserId))
+                {
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteAdvert('@advert.Id', this)">Usuń</button>
+                }
+            </div>
+        </div>
+    </div>
+}
+

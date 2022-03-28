@@ -1,0 +1,60 @@
+﻿@model Adverts.Core.Models.Domains.Advert
+
+@{
+    ViewData["Title"] = "Szczegóły ogłoszenia";
+}
+
+
+<div class="container">
+    <h1 class="display-5 mb-3">Szczegóły ogłoszenia</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    @for (int i = 0; i < Model.AdvertGalleries.Count; i++)
+                    {
+                        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@i" class="@(i==0 ? "active" : "")" aria-current="@(i==0 ? "true" : "")" aria-label="Slide @(i+1)"></button>
+                    }
+                </div>
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.AdvertGalleries.Count; i++)
+                    {
+                        <div class="@(i==0 ? "carousel-item active" : "carousel-item")">
+                            <img src="@Model.AdvertGalleries.AsEnumerable().ElementAt(i).Url" class="d-block w-100" alt="@Model.AdvertGalleries.AsEnumerable().ElementAt(i).Name">
+                        </div>
+                    }
+
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visible"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visible"></span>
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>@Model.Title</h1>
+                </div>
+            </div>
+            <div class="list-group">
+                <div class="list-group-item list-group-item-action">
+                    <span class="fw-bold">Kategoria -</span> @Model.Product.Category.Name
+                </div>
+                <div class="list-group-item list-group-item-action"><span class="fw-bold">Produkt - </span> @Model.Product.Name</div>
+                <div class="list-group-item list-group-item-action"><span class="fw-bold">Stan - </span> @Model.Condition.Name</div>
+                <div class="list-group-item list-group-item-action"><span class="fw-bold">Data wygaśnięcia - </span> @(Model.DateValid==null ? "Brak" : Model.DateValid?.ToString("dd-MM-yyyy"))</div>
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <span class="mb-1 fw-bold">Opis</span>
+                    </div>
+                    <p class="mb-1">@Model.Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

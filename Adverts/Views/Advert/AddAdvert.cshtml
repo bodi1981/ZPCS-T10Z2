@@ -1,0 +1,114 @@
+﻿@model Adverts.Core.ViewModels.AdvertViewModel
+
+@{
+    ViewData["Title"] = "Dodaj nowe ogłoszenie";
+}
+
+<div class="container">
+    <h1 class="display-5 mb-3">Dodaj nowe ogłoszenie</h1>
+
+    @if (ViewBag.IsSuccess == true)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Gratulacje!</strong> Udało Ci się dodać nowe ogłoszenie. <br />
+            Kliknij <a asp-action="GetAdvert" asp-controller="Advert" asp-route-advertId="@ViewBag.AdvertId">tu</a> aby wyświetlić szczegóły.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data" asp-action="AddAdvert" asp-controller="Advert" asp-antiforgery="true">
+        <input asp-for="Advert.UserId" hidden />
+
+        <div class="mb-2">
+            <label asp-for="Advert.Title" class="form-label"></label>
+            <input asp-for="Advert.Title" class="form-control" />
+            <span asp-validation-for="Advert.Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="CategoryId" class="form-label"></label>
+            <select asp-for="CategoryId" class="form-control" asp-items='new SelectList(Model.Categories, "Id", "Name")' id="category">
+                <option value="">-- wybierz kategorię --</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Advert.ProductId" class="form-label"></label>
+            <select asp-for="Advert.ProductId" class="form-control" id="product" disabled>
+                <option value="">-- wybierz rodzaj produktu --</option>
+            </select>
+            <span asp-validation-for="Advert.ProductId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Advert.Description" class="form-label"></label>
+            <textarea asp-for="Advert.Description" class="form-control"></textarea>
+            <span asp-validation-for="Advert.Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Advert.ConditionId" class="form-label"></label>
+            <select asp-for="Advert.ConditionId" class="form-control" asp-items='new SelectList(Model.Conditions, "Id", "Name")'>
+                <option value="">-- wybierz stan --</option>
+            </select>
+            <span asp-validation-for="Advert.ConditionId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="MainImageFile" for="customFile" class="form-label"></label>
+            <input asp-for="MainImageFile" accept="image/jpeg, image/gif, image/png" class="form-control" id="customFile">
+            <span asp-validation-for="MainImageFile" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="FileGalleries" for="formFileMultiple" class="form-label"></label>
+            <input asp-for="FileGalleries" accept="image/jpeg, image/gif, image/png" class="form-control" id="formFileMultiple" multiple>
+            <span asp-validation-for="FileGalleries" class="text-danger"></span>
+        </div>
+
+        <div class="mb-2">
+            <label asp-for="Advert.DateValid" class="form-label"></label>
+            <input asp-for="Advert.DateValid" class="form-control" />
+            <span asp-validation-for="Advert.DateValid" class="text-danger"></span>
+        </div>
+
+        <div class="mt-4">
+            <input type="submit" value="Dodaj ogłoszenie" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $('#category').change(function () {
+            var selectedCategory = $("#category").val();
+            var productsSelect = $('#product');
+            productsSelect.empty();
+
+            if (selectedCategory != null && selectedCategory != '') {
+                productsSelect.prop("disabled", false);
+                $.getJSON('@Url.Action("GetProducts", "Advert")', { categoryId: selectedCategory }, function (products) {
+                    if (products != null && !jQuery.isEmptyObject(products)) {
+                        setUpDefaultProductsOption(productsSelect);
+
+                        $.each(products, function (index, product) {
+                            productsSelect.append($('<option/>', {
+                                value: product.id,
+                                text: product.name
+                            }));
+                        });
+                    };
+                });
+            } else {
+                productsSelect.prop("disabled", true);
+                setUpDefaultProductsOption(productsSelect);
+            }
+        });
+
+    </script>
+
+}
