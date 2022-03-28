@@ -76,9 +76,7 @@ namespace Adverts.Controllers
 
             var vm = new AdvertViewModel
             {
-                Advert = advert,
-                Categories = await _unitOfWork.Category.GetCategories(),
-                Conditions = await _unitOfWork.Condition.GetConditions()
+                Advert = advert
             };
             return View(vm);
         }
@@ -115,12 +113,6 @@ namespace Adverts.Controllers
 
                 int advertId = await _unitOfWork.Advert.AddAdvert(vm.Advert);
                 return RedirectToAction("AddAdvert", new { advertId = advertId, isSuccess = true });
-            }
-            else
-            {
-                vm.Categories = await _unitOfWork.Category.GetCategories();
-                vm.Products = await _unitOfWork.Product.GetProducts();
-                vm.Conditions = await _unitOfWork.Condition.GetConditions();
             }
 
             return View(vm);

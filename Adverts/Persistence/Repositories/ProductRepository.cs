@@ -15,10 +15,6 @@ namespace Adverts.Persistence.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<Product>> GetProducts()
-        {
-            return await _dbContext.Products.ToListAsync();
-        }
 
         public async Task<IEnumerable<Product>> GetProductsByCategory(int id)
         {

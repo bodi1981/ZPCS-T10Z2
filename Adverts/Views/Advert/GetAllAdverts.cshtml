@@ -1,4 +1,5 @@
 ﻿@model Adverts.Core.ViewModels.AdvertsViewModel
+@inject Adverts.Core.IUnitOfWork _unitOfWork
 
 @{
     ViewData["Title"] = "Ogłoszenia";
@@ -13,7 +14,7 @@
         </div>
 
         <div class="col-12">
-            <select asp-for="CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))" class="form-control" id="category">
+            <select asp-for="CategoryId" asp-items="@(new SelectList(await _unitOfWork.Category.GetCategories(), "Id", "Name"))" class="form-control" id="category">
                 <option value="">-- wybierz kategorię --</option>
             </select>
         </div>
@@ -25,7 +26,7 @@
         </div>
 
         <div class="col-12">
-            <select asp-for="ConditionId" asp-items="@(new SelectList(Model.Conditions, "Id", "Name"))" class="form-control">
+            <select asp-for="ConditionId" asp-items="@(new SelectList(await _unitOfWork.Condition.GetConditions(), "Id", "Name"))" class="form-control">
                 <option value="">-- wybierz stan --</option>
             </select>
         </div>

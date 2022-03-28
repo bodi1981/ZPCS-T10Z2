@@ -1,4 +1,5 @@
 ﻿@model Adverts.Core.ViewModels.AdvertViewModel
+@inject Adverts.Core.IUnitOfWork _unitOfWork
 
 @{
     ViewData["Title"] = "Dodaj nowe ogłoszenie";
@@ -27,7 +28,7 @@
 
         <div class="mb-2">
             <label asp-for="CategoryId" class="form-label"></label>
-            <select asp-for="CategoryId" class="form-control" asp-items='new SelectList(Model.Categories, "Id", "Name")' id="category">
+            <select asp-for="CategoryId" class="form-control" asp-items='new SelectList(await _unitOfWork.Category.GetCategories(), "Id", "Name")' id="category">
                 <option value="">-- wybierz kategorię --</option>
             </select>
             <span asp-validation-for="CategoryId" class="text-danger"></span>
@@ -49,7 +50,7 @@
 
         <div class="mb-2">
             <label asp-for="Advert.ConditionId" class="form-label"></label>
-            <select asp-for="Advert.ConditionId" class="form-control" asp-items='new SelectList(Model.Conditions, "Id", "Name")'>
+            <select asp-for="Advert.ConditionId" class="form-control" asp-items='new SelectList(await _unitOfWork.Condition.GetConditions(), "Id", "Name")'>
                 <option value="">-- wybierz stan --</option>
             </select>
             <span asp-validation-for="Advert.ConditionId" class="text-danger"></span>

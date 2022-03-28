@@ -19,9 +19,7 @@ namespace Adverts.Core.ViewModels
         [Required(ErrorMessage = "Pole kategoria jest wymagane")]
         [Display(Name = "Kategoria")]
         public int? CategoryId { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
         public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<Condition> Conditions { get; set; }
 
         [Display(Name = "Wybierz zdjęcie główne")]
         public IFormFile MainImageFile { get; set; }
