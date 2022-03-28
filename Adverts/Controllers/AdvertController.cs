@@ -66,7 +66,7 @@ namespace Adverts.Controllers
             return PartialView("_AdvertCards", vm);
         }
 
-        public async Task<IActionResult> AddAdvert(int advertId = 0, bool isSuccess = false)
+        public IActionResult AddAdvert(int advertId = 0, bool isSuccess = false)
         {
             var userId = User.GetUserId();
             var advert = new Advert { UserId = userId };
