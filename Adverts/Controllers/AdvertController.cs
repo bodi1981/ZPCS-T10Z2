@@ -22,11 +22,11 @@ namespace Adverts.Controllers
     public class AdvertController : Controller
     {
         private IUnitOfWork _unitOfWork;
-        private IWebHostEnvironment _env;
-        public AdvertController(IUnitOfWork unitOfWork, IWebHostEnvironment env)
+        private IImage _image;
+        public AdvertController(IUnitOfWork unitOfWork, IImage image)
         {
             _unitOfWork = unitOfWork;
-            _env = env;
+            _image = image;
         }
 
         [AllowAnonymous]
@@ -90,26 +90,7 @@ namespace Adverts.Controllers
 
             if (ModelState.IsValid)
             {
-                if (vm.MainImageFile != null)
-                {
-                    string folderPath = @"adverts\images\";
-                    vm.Advert.MainImageUrl = await UploadImage(folderPath, vm.MainImageFile);
-                }
-
-                if (vm.FileGalleries.Any())
-                {
-                    string folderPath = @"adverts\gallery\";
-                    vm.Advert.AdvertGalleries = new Collection<AdvertGallery>();
-
-                    foreach (var file in vm.FileGalleries)
-                    {
-                        vm.Advert.AdvertGalleries.Add(new AdvertGallery
-                        {
-                            Name = file.FileName,
-                            Url = await UploadImage(folderPath, file)
-                        });
-                    }
-                }
+                await _image.UploadImages(vm);
 
                 int advertId = await _unitOfWork.Advert.AddAdvert(vm.Advert);
                 return RedirectToAction("AddAdvert", new { advertId = advertId, isSuccess = true });
@@ -150,13 +131,6 @@ namespace Adverts.Controllers
             var json = Json(products);
             return Json(products);
         }
-
-        private async Task<string> UploadImage(string folderPath, IFormFile formFile)
-        {
-            folderPath += $"{Guid.NewGuid()}{formFile.FileName}";
-            string serverFolder = Path.Combine(_env.WebRootPath, folderPath);
-            await formFile.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-            return $@"\{folderPath}";
-        }
+        
     }
 }

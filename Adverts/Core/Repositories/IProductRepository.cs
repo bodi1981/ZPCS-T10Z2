@@ -8,6 +8,6 @@ namespace Adverts.Core.Repositories
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetProductsByCategory(int id);
+        Task<IEnumerable<Product>> GetProductsByCategory(int id = 0);
     }
 }
