@@ -68,6 +68,7 @@ namespace Adverts.Controllers
 
         public IActionResult AddAdvert(int advertId = 0, bool isSuccess = false)
         {
+            ViewBag.IsProductsListDisabled = true;
             var userId = User.GetUserId();
             var advert = new Advert { UserId = userId };
 
@@ -85,6 +86,9 @@ namespace Adverts.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddAdvert(AdvertViewModel vm)
         {
+            if (vm.CategoryId == null)
+                ViewBag.IsProductsListDisabled = true;
+
             var userId = User.GetUserId();
             vm.Advert.UserId = userId;
 
@@ -131,6 +135,6 @@ namespace Adverts.Controllers
             var json = Json(products);
             return Json(products);
         }
-        
+
     }
 }

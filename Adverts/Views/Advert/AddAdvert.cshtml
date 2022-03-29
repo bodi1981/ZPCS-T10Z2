@@ -36,7 +36,7 @@
 
         <div class="mb-2">
             <label asp-for="Advert.ProductId" class="form-label"></label>
-            <select asp-for="Advert.ProductId" class="form-control" asp-items='new SelectList(await _unitOfWork.Product.GetProductsByCategory(Model.CategoryId==null ? 0 : (int)Model.CategoryId), "Id", "Name")' id="product" >
+            <select asp-for="Advert.ProductId" class="form-control" asp-items='new SelectList(await _unitOfWork.Product.GetProductsByCategory(Model.CategoryId==null ? 0 : (int)Model.CategoryId), "Id", "Name")' id="product" disabled="@ViewBag.IsProductsListDisabled">
                 <option value="">-- wybierz rodzaj produktu --</option>
             </select>
             <span asp-validation-for="Advert.ProductId" class="text-danger"></span>
