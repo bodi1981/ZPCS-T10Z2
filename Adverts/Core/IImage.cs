@@ -6,7 +6,6 @@ namespace Adverts.Core
 {
     public interface IImage
     {
-        Task<string> UploadImage(string folderPath, IFormFile formFile);
         Task UploadImages(AdvertViewModel vm);
     }
 }

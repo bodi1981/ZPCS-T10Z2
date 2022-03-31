@@ -19,7 +19,7 @@ namespace Adverts.Persistence
         {
             _env = env;
         }
-        public async Task<string> UploadImage(string folderPath, IFormFile formFile)
+        private async Task<string> UploadImage(string folderPath, IFormFile formFile)
         {
             folderPath += $"{Guid.NewGuid()}{formFile.FileName}";
             string serverFolder = Path.Combine(_env.WebRootPath, folderPath);
