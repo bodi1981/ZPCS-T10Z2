@@ -85,20 +85,19 @@
                 data: {
                     advertId: id
                 },
-                dataType: "json"
-            })
-            .done(function (data) {
-                if (data.success) {
-                    var elem = btn.parentNode.parentNode.parentNode;
-                    elem.parentNode.removeChild(elem);
-                } else {
-                    alert(data.message)
-                }
-            })
-            .fail(function (data) {
-                alert(data.message)
-            })
-
+                    success: function (data) {
+                        if (data.success) {
+                            var elem = btn.parentNode.parentNode.parentNode;
+                            elem.parentNode.removeChild(elem);
+                        } else {
+                            alert(data.message)
+                        }
+                    },
+                    error: function (data) {
+                        alert(data.message)
+                    },
+                    dataType: "json"
+                });
         }
 
     </script>
